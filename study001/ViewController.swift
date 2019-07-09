@@ -9,6 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSource,UIPickerViewDelegate {
+    //输入框代理实现//输入框内容改变系统回调
     func textField(_ textField:UITextField,shouldChangeCharactersIn range:NSRange,replacementString string:String)->Bool{
         if string.count>0{
             let charas:[Character]=["0","1","2","3","4","5","6","7","8","9"]
@@ -76,6 +77,7 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
         label.shadowOffset=CGSize(width: 2, height: 2)//阴影偏移量
         
         scrollView.addSubview(label)
+        
         //按钮控件
         let button_1=UIButton(type: .system)//system:系统类型，custom：自定义，detailDisclosure：详情，contactAdd：添加
         button_1.frame=CGRect(x: 40, y: 150, width: 240, height: 30)
@@ -93,21 +95,25 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
         button.setTitle("电我一下", for:.normal)
         button.addTarget(self, action:#selector(changeColor), for:.touchUpInside)
         button.contentEdgeInsets=UIEdgeInsets(top: 0,left: 0,bottom: 0,right: 0)
-        button.imageEdgeInsets=UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 100)
-        button.titleEdgeInsets=UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        button.imageEdgeInsets=UIEdgeInsets(top: 0, left: 100, bottom: 0, right: 0)
+        button.titleEdgeInsets=UIEdgeInsets(top: 0, left: 100, bottom: 0, right: 0)
+
         scrollView.addSubview(button)
+
         //文本输入框控件
-        let textField = UITextField(frame: CGRect(x: 40, y: 150, width: 240, height: 30))
-        textField.borderStyle = .roundedRect
-        textField.placeholder = "请输入文字"
-        textField.textColor=UIColor.red
-        textField.font=UIFont.systemFont(ofSize: 14)
-        textField.textAlignment = .center
-        let imageView=UIImageView(image: UIImage(named: "timg-4"))
-        textField.leftView=imageView
-        textField.leftViewMode = .always
-        textField.delegate=self
-        self.view.addSubview(textField)
+        let textField = UITextField(frame: CGRect(x: 40, y: 250, width: 240, height: 30))
+        textField.borderStyle = .roundedRect//风格
+        textField.placeholder = "请输入文字"//提示
+        textField.textColor=UIColor.red//字体颜色
+        textField.font=UIFont.systemFont(ofSize: 14)//字体大小
+        textField.textAlignment = .left//对齐方式
+        let imageView=UIImageView(image: UIImage(named: "shouye1"))//
+        textField.leftView=imageView//左视图
+        textField.leftViewMode = .always//显示模式
+        textField.delegate=self//设置代理
+        
+        scrollView.addSubview(textField)
+        
         //开关控件
         let swi=UISwitch(frame: CGRect(x: 40, y: 200, width: 240, height: 30))
         swi.onTintColor=UIColor.green
