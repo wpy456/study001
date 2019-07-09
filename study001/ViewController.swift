@@ -46,21 +46,56 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        //滚动视图
+        let frame=self.view.frame
+        let scrollView=UIScrollView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height*2))
+        scrollView.backgroundColor=UIColor.green
+        scrollView.bounces=true//回弹效果
+        scrollView.alwaysBounceVertical=true//始终竖直回弹
+        scrollView.alwaysBounceHorizontal=true//始终水平回弹
+        scrollView.isPagingEnabled=true//分页效果
+        scrollView.showsVerticalScrollIndicator=true//竖直滚动条
+        scrollView.showsHorizontalScrollIndicator=true//水平滚动条
+        scrollView.indicatorStyle = .black//提示条风格
+        scrollView.scrollsToTop=true//点击状态栏滚动到顶部
+        scrollView.minimumZoomScale=0.5//缩小倍率
+        scrollView.maximumZoomScale=2.0//放大倍率
+        scrollView.bouncesZoom=true//回弹效果
+        
+//        self.view.addSubview(scrollView);
         //文本控件
-        let label=UILabel(frame: CGRect(x: 40, y: 50, width: 240, height: 30))
-        label.text="Hello World,Hello World,Hello World,Hello World"
-        label.numberOfLines=0
-        label.backgroundColor = UIColor.red
-        self.view.addSubview(label)
+        let label=UILabel(frame: CGRect(x: 40, y: 0, width: 240, height: 130))
+        label.text="Hello World,HelloHello World,HelloHello World,HelloHello World,HelloHello World,Hello "
+        label.numberOfLines=0//行数，0:无限换行
+        label.lineBreakMode = .byClipping//换行方式
+        label.backgroundColor = UIColor.red//背景颜色
+        label.font=UIFont.systemFont(ofSize: 24)//字体字号
+        label.textColor=UIColor.white//字体颜色
+        label.textAlignment = .center//对齐模式// .left  .center  .right
+        label.shadowColor=UIColor.green//阴影颜色
+        label.shadowOffset=CGSize(width: 2, height: 2)//阴影偏移量
+        
+        scrollView.addSubview(label)
         //按钮控件
+        let button_1=UIButton(type: .system)//system:系统类型，custom：自定义，detailDisclosure：详情，contactAdd：添加
+        button_1.frame=CGRect(x: 40, y: 150, width: 240, height: 30)
+        button_1.backgroundColor = UIColor.red
+        button_1.setTitle("电我一下", for:.normal)
+        button_1.addTarget(self, action:#selector(changeColor), for:.touchUpInside)
+        scrollView.addSubview(button_1)
+        
         let button = UIButton(type:.custom)
-        button.setBackgroundImage(UIImage(named: "timg"), for: .normal)
+        button.setBackgroundImage(UIImage(named: "duanxinmoban_wancheng"), for: .normal)//背景图片
+        button.setImage(UIImage(named: "wode_VIP"), for: .normal)//图片
         //button.setImage(UIImage(named: "timg"), for: .normal)
-        button.frame = CGRect(x: 40, y: 100, width: 240, height: 30)
+        button.frame = CGRect(x: 40, y: 200, width: 240, height: 30)
         button.backgroundColor = UIColor.red
         button.setTitle("电我一下", for:.normal)
         button.addTarget(self, action:#selector(changeColor), for:.touchUpInside)
-        self.view.addSubview(button)
+        button.contentEdgeInsets=UIEdgeInsets(top: 0,left: 0,bottom: 0,right: 0)
+        button.imageEdgeInsets=UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 100)
+        button.titleEdgeInsets=UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        scrollView.addSubview(button)
         //文本输入框控件
         let textField = UITextField(frame: CGRect(x: 40, y: 150, width: 240, height: 30))
         textField.borderStyle = .roundedRect
@@ -168,8 +203,7 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
         datePicker.addTarget(self, action: #selector(selector), for: .valueChanged)
         self.view.addSubview(datePicker)
         
-        
-        
+        self.view.addSubview(scrollView);
     }
     @objc func selector(datePicker:UIDatePicker){
         print(datePicker.date)
