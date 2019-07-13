@@ -25,21 +25,26 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
         }
         return true
     }
+    //选择器列数--分区
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 2
     }
+    //选择器行数
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return 10
-    }
+    }//
+    //选择器内容
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return "\(component)分区\(row)行数据"
-    }
+    }//选择器行高
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return 44
+        return 24
     }
+    //选择器行宽
     func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-        return 144
+        return 120
     }
+    //选择值
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         print("\(component)分区\(row)行")
     }
@@ -49,11 +54,11 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
         // Do any additional setup after loading the view.
         //滚动视图
         let frame=self.view.frame
-        let scrollView=UIScrollView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height*2))
-        scrollView.backgroundColor=UIColor.green
-        scrollView.bounces=true//回弹效果
-        scrollView.alwaysBounceVertical=true//始终竖直回弹
-        scrollView.alwaysBounceHorizontal=true//始终水平回弹
+        let scrollView=UIScrollView(frame: CGRect(x: 10, y: 10, width: frame.width-20, height: frame.height-40))
+        scrollView.backgroundColor=UIColor.gray
+//        scrollView.bounces=true//回弹效果
+//        scrollView.alwaysBounceVertical=true//始终竖直回弹
+//        scrollView.alwaysBounceHorizontal=true//始终水平回弹
         scrollView.isPagingEnabled=true//分页效果
         scrollView.showsVerticalScrollIndicator=true//竖直滚动条
         scrollView.showsHorizontalScrollIndicator=true//水平滚动条
@@ -63,6 +68,9 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
         scrollView.maximumZoomScale=2.0//放大倍率
         scrollView.bouncesZoom=true//回弹效果
         
+//        let newView=UIView(frame: CGRect(x: 20, y: 10, width: frame.width*2, height: frame.height*2))
+//        newView.backgroundColor=UIColor.green
+//        scrollView.addSubview(newView)
 //        self.view.addSubview(scrollView);
         //文本控件
         let label=UILabel(frame: CGRect(x: 40, y: 0, width: 240, height: 130))
@@ -115,83 +123,101 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
         scrollView.addSubview(textField)
         
         //开关控件
-        let swi=UISwitch(frame: CGRect(x: 40, y: 200, width: 240, height: 30))
-        swi.onTintColor=UIColor.green
-        swi.tintColor=UIColor.red
-        swi.thumbTintColor=UIColor.orange
-        swi.addTarget(self, action: #selector(changeSelfColor), for: .touchUpInside)
-        self.view.addSubview(swi)
+        let swi=UISwitch(frame: CGRect(x: 40, y: 300, width: 240, height: 30))
+        swi.onTintColor=UIColor.green//开启颜色
+        swi.tintColor=UIColor.red//关闭颜色
+        swi.thumbTintColor=UIColor.orange//按钮颜色
+        swi.addTarget(self, action: #selector(changeSelfColor), for: .touchUpInside)//交互
+        
+        scrollView.addSubview(swi)
+        
         //分页控制器
         //self.view.backgroundColor=UIColor.black
-        let page=UIPageControl(frame: CGRect(x: 40, y: 250, width: 240, height: 30))
-        page.currentPageIndicatorTintColor=UIColor.red
-        page.addTarget(self, action: #selector(changeNum), for: .valueChanged)
-        page.numberOfPages=8
-        self.view.addSubview(page)
+        let page=UIPageControl(frame: CGRect(x: 40, y: 350, width: 240, height: 30))
+        page.currentPageIndicatorTintColor=UIColor.red//高亮页码点颜色
+        page.addTarget(self, action: #selector(changeNum), for: .valueChanged)//交互
+        page.numberOfPages=8//页码数量
+        
+        scrollView.addSubview(page)
+        
         //分段控制器
-        let seg=UISegmentedControl(items: ["one","three","four"])
-        seg.frame=CGRect(x: 40, y: 300, width: 240, height: 30)
-        seg.setImage(UIImage(named: "timg-4")?.withRenderingMode(.alwaysOriginal), forSegmentAt: 0)
-        seg.setContentOffset(CGSize(width: 10, height: 10), forSegmentAt: 1)
-        seg.isMomentary=true
+        let items=["one","three","four"]
+        let seg=UISegmentedControl(items: items)
+        seg.frame=CGRect(x: 40, y: 400, width: 240, height: 30)
+        seg.setImage(UIImage(named: "wode_VIP")?.withRenderingMode(.alwaysOriginal), forSegmentAt: 1)//设置按钮图案
+        seg.setContentOffset(CGSize(width: 0, height: 0), forSegmentAt: 0)//设置按钮偏移量
+        seg.isMomentary=false//切换模式/按钮模式
         seg.addTarget(self, action: #selector(changeClick), for: .valueChanged)
-        self.view.addSubview(seg)
+        
+        scrollView.addSubview(seg)
+        
         //滑块控件
-        let slider=UISlider(frame: CGRect(x: 40, y: 350, width: 240, height: 30))
-        slider.isContinuous=true
-        slider.minimumValue=0
-        slider.maximumValue=10
-        slider.minimumTrackTintColor=UIColor.red
-        slider.maximumTrackTintColor=UIColor.green
-        //slider.thumbTintColor=UIColor.blue
-        slider.minimumValueImage=UIImage(named: "timg-4")
-        slider.maximumValueImage=UIImage(named: "timg-4")
-        slider.setThumbImage(UIImage(named: "timg-4"), for: .normal)
-        slider.addTarget(self, action: #selector(changeValue), for: .valueChanged)
-        self.view.addSubview(slider)
-        //活动指示器控件
-        let indicator=UIActivityIndicatorView(style: .gray)
-        indicator.center=CGPoint(x: self.view.frame.width/2, y: self.view.frame.height/2)
-        indicator.color=UIColor.black
-        self.view.addSubview(indicator)
-        indicator.startAnimating()
+        let slider=UISlider(frame: CGRect(x: 40, y: 450, width: 240, height: 30))
+        slider.isContinuous=true//触发是否连续
+        slider.minimumValue=0//最小值
+        slider.maximumValue=10//最大值
+        slider.minimumTrackTintColor=UIColor.red//左颜色
+        slider.maximumTrackTintColor=UIColor.green//右颜色
+        //slider.thumbTintColor=UIColor.blue//滑块颜色
+        slider.minimumValueImage=UIImage(named: "wode_VIP")//左y图
+        slider.maximumValueImage=UIImage(named: "wode_VIP")//右图
+        slider.setThumbImage(UIImage(named: "wode_VIP"), for: .normal)//滑块图
+        slider.addTarget(self, action: #selector(changeValue), for: .valueChanged)//触发
+        
+        scrollView.addSubview(slider)
+        
+        //活动指示器控件---风火轮---加载状态
+        let indicator=UIActivityIndicatorView(style: .white)//风格
+        indicator.center=CGPoint(x: self.view.frame.width/2, y: self.view.frame.height/2)//位置
+        indicator.color=UIColor.red//颜色
+        scrollView.addSubview(indicator)
+        
+        indicator.startAnimating()//开始
+        
+//        indicator.stopAnimating()//停止
         //进度条控件
-        let progressView=UIProgressView(frame:CGRect(x: 40, y: 400, width: 240, height: 30))
-        progressView.progressTintColor=UIColor.red
-        progressView.trackTintColor=UIColor.blue
-        self.view.addSubview(progressView)
-        progressView.progress=0.5
+        let progressView=UIProgressView(frame:CGRect(x: 40, y: 500, width: 240, height: 30))
+        progressView.progressTintColor=UIColor.red//已走过颜色
+        progressView.trackTintColor=UIColor.blue//未走过颜色
+        scrollView.addSubview(progressView)
+        
+        progressView.progress=0.5//进度
+        
         //步进控制器
         let stepper=UIStepper()
-        stepper.center=CGPoint(x: self.view.frame.width/2, y: 500)
-        stepper.isContinuous=true
-        stepper.autorepeat=true
-        stepper.wraps=true
-        stepper.minimumValue=1
-        stepper.maximumValue=10
-        stepper.stepValue=1
-        stepper.tintColor=UIColor.red
-        stepper.setDecrementImage(UIImage(named: "timg-4")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        stepper.setIncrementImage(UIImage(named: "timg-4")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        stepper.center=CGPoint(x: self.view.frame.width/2, y: 550)
+        stepper.isContinuous=true//触发是否连续执行
+        stepper.autorepeat=true//值知否连续改变
+        stepper.wraps=true//值知否循环
+        stepper.minimumValue=1//最小值
+        stepper.maximumValue=10//最大值
+        stepper.stepValue=1//步长
+        stepper.tintColor=UIColor.red//颜色
+//        stepper.setDecrementImage(UIImage(named: "wode_VIP")?.withRenderingMode(.alwaysOriginal), for: .normal)
+//        stepper.setIncrementImage(UIImage(named: "wode_VIP")?.withRenderingMode(.alwaysOriginal), for: .normal)
         stepper.addTarget(self, action: #selector(onClick), for: .valueChanged)
-        self.view.addSubview(stepper)
+        
+        scrollView.addSubview(stepper)
+        
         //选择控制器
-        let picker=UIPickerView(frame: CGRect(x: 40, y: 550, width: 280, height: 150))
+        let picker=UIPickerView(frame: CGRect(x: 40, y: 600, width: 280, height: 150))
         picker.delegate=self
         picker.dataSource=self
-        self.view.addSubview(picker)
+        
+        scrollView.addSubview(picker)
+        
         //通过calayer对视图进行修饰
         let btn=UIButton(type: .custom)
-        btn.frame=CGRect(x: 40, y: 700, width: 240, height: 30)
+        btn.frame=CGRect(x: 40, y: 800, width: 240, height: 30)
         btn.backgroundColor=UIColor.red
-        btn.layer.masksToBounds=true
+        btn.layer.masksToBounds=true//对视图边界修饰
         btn.layer.cornerRadius=10
         btn.layer.borderColor=UIColor.green.cgColor
         btn.layer.borderWidth=1
         btn.layer.shadowColor=UIColor.gray.cgColor
         btn.layer.shadowOffset=CGSize(width: 10, height: 10)
         btn.layer.shadowOpacity=0.5
-        self.view.addSubview(btn)
+        scrollView.addSubview(btn)
         //警告控制器
         //搜索栏控件
         let searchBar=UISearchBar(frame: CGRect(x: 40, y: 750, width: 280, height: 30))
@@ -214,9 +240,11 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
     @objc func selector(datePicker:UIDatePicker){
         print(datePicker.date)
     }
+    //步进
     @objc func onClick(stepper:UIStepper){
         print(stepper.value)
     }
+    //滑块交互
     @objc func changeValue(slider:UISlider) {
         print(slider.value)
     }
@@ -224,7 +252,7 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
         self.view.backgroundColor=UIColor(red: CGFloat(arc4random()%255)/255.0, green: CGFloat(arc4random()%255)/255.0, blue: CGFloat(arc4random()%255)/255.0, alpha: 1)
         
     }
-    
+//开关控件交互
     @objc func changeSelfColor(swi:UISwitch){
         if(swi.isOn){
             self.view.backgroundColor=UIColor.red
@@ -232,9 +260,11 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
             self.view.backgroundColor=UIColor.white
         }
     }
+    //页码交互
     @objc func changeNum(page:UIPageControl){
         print(page.currentPage)
     }
+    //分段交互
     @objc func changeClick(seg:UISegmentedControl){
         print(seg.selectedSegmentIndex)
         if(seg.selectedSegmentIndex==1){
@@ -255,43 +285,45 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
             seg.apportionsSegmentWidthsByContent=true
         }
     }
+    //警告控制器。 警告框。活动列表
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        //        let alertView=UIAlertController(title: "标题", message: "警告的内容", preferredStyle:.alert)
-        //       // let alertView=UIAlertController(title: "标题", message: "警告的内容", preferredStyle:.actionSheet)
-        //        let action=UIAlertAction(title: "按钮1", style: .default, handler: {(UIAlertAction)->Void in
-        //            print("click1")
-        //        })
-        //        let action2=UIAlertAction(title: "按钮2", style: .default, handler: {(UIAlertAction)->Void in
-        //            print("click2")
-        //        })
-        //        let action3=UIAlertAction(title: "按钮3", style: .default, handler: {(UIAlertAction)->Void in
-        //            print("click3")
-        //        })
-        //        alertView.addAction(action)
-        //        alertView.addAction(action2)
-        //        alertView.addAction(action3)
-        //        alertView.addTextField{(textfield)in
-        //            textfield.placeholder="place"
-        //        }
-        //        self.present(alertView,animated: true,completion: nil)
+                let alertView=UIAlertController(title: "标题", message: "警告的内容", preferredStyle:.alert)
+               // let alertView=UIAlertController(title: "标题", message: "警告的内容", preferredStyle:.actionSheet)
+                let action=UIAlertAction(title: "按钮1", style: .default, handler: {(UIAlertAction)->Void in
+                    print("click1")
+                })
+                let action2=UIAlertAction(title: "按钮2", style: .default, handler: {(UIAlertAction)->Void in
+                    print("click2")
+                })
+                let action3=UIAlertAction(title: "按钮3", style: .default, handler: {(UIAlertAction)->Void in
+                    print("click3")
+                })
+                alertView.addAction(action)
+                alertView.addAction(action2)
+                alertView.addAction(action3)
+                alertView.addTextField{(textfield)in
+                    textfield.placeholder="place"
+                }
+                self.present(alertView,animated: true,completion: nil)
         
         
-        let actionSheet = UIAlertController(title: "标题", message: "内容", preferredStyle: .actionSheet)
-        let action = UIAlertAction(title: "one", style: .destructive, handler: {(UIAlertAction) -> Void in
-            print("one")
-        })
-        let action2 = UIAlertAction(title: "two", style: .default, handler: {(UIAlertAction) -> Void in
-            print("two")
-        })
-        let action3 = UIAlertAction(title: "three", style: .cancel, handler: {(UIAlertAction) -> Void in
-            print("three")
-        })
-        actionSheet.addAction(action)
-        actionSheet.addAction(action2)
-        actionSheet.addAction(action3)
-        self.present(actionSheet, animated: true, completion: nil)
+//        let actionSheet = UIAlertController(title: "标题", message: "内容", preferredStyle: .actionSheet)
+//        let action = UIAlertAction(title: "one", style: .destructive, handler: {(UIAlertAction) -> Void in
+//            print("one")
+//        })
+//        let action2 = UIAlertAction(title: "two", style: .default, handler: {(UIAlertAction) -> Void in
+//            print("two")
+//        })
+//        let action3 = UIAlertAction(title: "three", style: .cancel, handler: {(UIAlertAction) -> Void in
+//            print("three")
+//        })
+//        actionSheet.addAction(action)
+//        actionSheet.addAction(action2)
+//        actionSheet.addAction(action3)
+//        self.present(actionSheet, animated: true, completion: nil)
         
     }
+ 
     
     
 }
