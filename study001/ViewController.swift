@@ -8,7 +8,11 @@
 
 import UIKit
 
-class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSource,UIPickerViewDelegate {
+class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSource,UIPickerViewDelegate ,UISearchBarDelegate{
+    //搜索
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        print(searchBar.text!)
+    }
     //输入框代理实现//输入框内容改变系统回调
     func textField(_ textField:UITextField,shouldChangeCharactersIn range:NSRange,replacementString string:String)->Bool{
         if string.count>0{
@@ -55,11 +59,13 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
         //滚动视图
         let frame=self.view.frame
         let scrollView=UIScrollView(frame: CGRect(x: 10, y: 10, width: frame.width-20, height: frame.height-40))
+//        let scrollView=UIScrollView(frame: frame)
+        scrollView.contentSize=CGSize(width: frame.size.width, height: frame.size.height*2)//滚动试图内容大小
         scrollView.backgroundColor=UIColor.gray
-//        scrollView.bounces=true//回弹效果
-//        scrollView.alwaysBounceVertical=true//始终竖直回弹
-//        scrollView.alwaysBounceHorizontal=true//始终水平回弹
-        scrollView.isPagingEnabled=true//分页效果
+        scrollView.bounces=true//回弹效果
+        scrollView.alwaysBounceVertical=true//始终竖直回弹
+        scrollView.alwaysBounceHorizontal=true//始终水平回弹
+        scrollView.isPagingEnabled=false//分页效果
         scrollView.showsVerticalScrollIndicator=true//竖直滚动条
         scrollView.showsHorizontalScrollIndicator=true//水平滚动条
         scrollView.indicatorStyle = .black//提示条风格
@@ -208,7 +214,7 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
         
         //通过calayer对视图进行修饰
         let btn=UIButton(type: .custom)
-        btn.frame=CGRect(x: 40, y: 800, width: 240, height: 30)
+        btn.frame=CGRect(x: 40, y: 800, width: 100, height: 30)
         btn.backgroundColor=UIColor.red
         btn.layer.masksToBounds=true//对视图边界修饰
         btn.layer.cornerRadius=10
@@ -216,27 +222,51 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
         btn.layer.borderWidth=1
         btn.layer.shadowColor=UIColor.gray.cgColor
         btn.layer.shadowOffset=CGSize(width: 10, height: 10)
-        btn.layer.shadowOpacity=0.5
+        btn.layer.shadowOpacity=1
+        btn.setTitle("警告", for:.normal)
         scrollView.addSubview(btn)
+        
         //警告控制器
+        btn.addTarget(self, action:#selector(up), for:.touchUpInside)
+        
+        let btn_2=UIButton(type: .custom)
+        btn_2.frame=CGRect(x: 160, y: 800, width: 100, height: 30)
+        btn_2.backgroundColor=UIColor.red
+        btn_2.layer.masksToBounds=true//对视图边界修饰
+        btn_2.layer.cornerRadius=10
+        btn_2.layer.borderColor=UIColor.green.cgColor
+        btn_2.layer.borderWidth=1
+        btn_2.layer.shadowColor=UIColor.gray.cgColor
+        btn_2.layer.shadowOffset=CGSize(width: 10, height: 10)
+        btn_2.layer.shadowOpacity=0.5
+        btn_2.setTitle("活动列表", for:.normal)
+        scrollView.addSubview(btn_2)
+        
+        btn_2.addTarget(self, action:#selector(dw), for:.touchDown)
+        
         //搜索栏控件
-        let searchBar=UISearchBar(frame: CGRect(x: 40, y: 750, width: 280, height: 30))
-        searchBar.tintColor=UIColor.red
-        searchBar.placeholder="请输入搜索内容"
-        searchBar.showsScopeBar=true
-        searchBar.showsCancelButton=true
-        searchBar.showsBookmarkButton=true
+        let searchBar=UISearchBar(frame: CGRect(x: 40, y: 850, width: 280, height: 30))
+        searchBar.tintColor=UIColor.red//光标和扩展栏颜色
+        searchBar.placeholder="请输入搜索内容"//提示
+        searchBar.showsScopeBar=true//是否显示扩展栏
+        searchBar.showsCancelButton=true//取消按钮
+//        searchBar.showsBookmarkButton=true//图书按钮。二选一
         searchBar.showsSearchResultsButton=true
         searchBar.scopeButtonTitles=["one","two","three"]
-        self.view.addSubview(searchBar)
+        searchBar.delegate=self
+        
+        scrollView.addSubview(searchBar)
+        
         //日期时间选择器
-        let datePicker=UIDatePicker(frame: CGRect(x: 40, y: 400, width: 280, height: 150))
+        let datePicker=UIDatePicker(frame: CGRect(x: 40, y: 980, width: 280, height: 150))
         datePicker.datePickerMode = .time
         datePicker.addTarget(self, action: #selector(selector), for: .valueChanged)
-        self.view.addSubview(datePicker)
+        scrollView.addSubview(datePicker)
         
         self.view.addSubview(scrollView);
     }
+    
+    //时间选择器
     @objc func selector(datePicker:UIDatePicker){
         print(datePicker.date)
     }
@@ -287,8 +317,8 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
     }
     //警告控制器。 警告框。活动列表
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-                let alertView=UIAlertController(title: "标题", message: "警告的内容", preferredStyle:.alert)
-               // let alertView=UIAlertController(title: "标题", message: "警告的内容", preferredStyle:.actionSheet)
+//                let alertView=UIAlertController(title: "标题", message: "警告的内容", preferredStyle:.alert)
+                let alertView=UIAlertController(title: "标题", message: "警告的内容", preferredStyle:.actionSheet)
                 let action=UIAlertAction(title: "按钮1", style: .default, handler: {(UIAlertAction)->Void in
                     print("click1")
                 })
@@ -301,29 +331,63 @@ class ViewController: UIViewController,UITextFieldDelegate ,UIPickerViewDataSour
                 alertView.addAction(action)
                 alertView.addAction(action2)
                 alertView.addAction(action3)
-                alertView.addTextField{(textfield)in
-                    textfield.placeholder="place"
-                }
+//                alertView.addTextField{(textfield)in
+//                    textfield.placeholder="place"
+//                }
                 self.present(alertView,animated: true,completion: nil)
         
         
-//        let actionSheet = UIAlertController(title: "标题", message: "内容", preferredStyle: .actionSheet)
-//        let action = UIAlertAction(title: "one", style: .destructive, handler: {(UIAlertAction) -> Void in
-//            print("one")
-//        })
-//        let action2 = UIAlertAction(title: "two", style: .default, handler: {(UIAlertAction) -> Void in
-//            print("two")
-//        })
-//        let action3 = UIAlertAction(title: "three", style: .cancel, handler: {(UIAlertAction) -> Void in
-//            print("three")
-//        })
-//        actionSheet.addAction(action)
-//        actionSheet.addAction(action2)
-//        actionSheet.addAction(action3)
-//        self.present(actionSheet, animated: true, completion: nil)
+
         
     }
  
-    
+    @objc func up() {
+        let alertView=UIAlertController(title: "标题", message: "警告的内容", preferredStyle:.alert)
+        //                let alertView=UIAlertController(title: "标题", message: "警告的内容", preferredStyle:.actionSheet)
+        let action=UIAlertAction(title: "按钮1", style: .default, handler: {(UIAlertAction)->Void in
+            print("click1")
+        })
+        let action2=UIAlertAction(title: "按钮2", style: .default, handler: {(UIAlertAction)->Void in
+            print("click2")
+        })
+        let action3=UIAlertAction(title: "按钮3", style: .default, handler: {(UIAlertAction)->Void in
+            print("click3")
+        })
+        alertView.addAction(action)
+        alertView.addAction(action2)
+        alertView.addAction(action3)
+                        alertView.addTextField{(textfield)in
+                            textfield.placeholder="place"
+                        }
+        self.present(alertView,animated: true,completion: nil)
+        
+        
+        
+        
+    }
+    @objc func dw() {
+//        let alertView=UIAlertController(title: "标题", message: "警告的内容", preferredStyle:.alert)
+        let actionSheet=UIAlertController(title: "标题", message: "警告的内容", preferredStyle:.actionSheet)
+        let action=UIAlertAction(title: "按钮1", style: .destructive, handler: {(UIAlertAction)->Void in
+            print("click1")
+        })
+        let action2=UIAlertAction(title: "按钮2", style: .default, handler: {(UIAlertAction)->Void in
+            print("click2")
+        })
+        let action3=UIAlertAction(title: "按钮3", style: .default, handler: {(UIAlertAction)->Void in
+            print("click3")
+        })
+        actionSheet.addAction(action)
+        actionSheet.addAction(action2)
+        actionSheet.addAction(action3)
+        //                alertView.addTextField{(textfield)in
+        //                    textfield.placeholder="place"
+        //                }
+        self.present(actionSheet,animated: true,completion: nil)
+        
+        
+        
+        
+    }
     
 }
